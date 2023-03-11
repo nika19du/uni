@@ -1,0 +1,51 @@
+    //Arrange
+	fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+	var configuration1=CreateConfigurationObject(fixture);
+	var configuration2=CreateConfigurationObject(fixture);
+
+	var command=new ConfigurationListQuery(null,null,null);
+	var handler = new ConfigurationListQueryHandler(_mapper,_configurationRepository.Object);
+
+	//var cfs=new []{configuration1,configuration2};
+
+	_configurationRepository.Setup(x=>x.GetConfigurationsByVendrorAndCountryAsync(configuration1.VendorId,configuration1.CountryId))
+	.ReturnsAsync(new[]{configuration1});
+	_configurationRepository.Setup(x=>x.GetConfigurationsByVendrorAndCountryAsync(configuration2.VendorId,configuration2.CountryId))
+	.ReturnsAsync(new[]{configuration2});
+
+	//Act
+	var result = handler.Handle(command,default).GetAwaiter().GetResult();
+	//Assert
+	result.Status.ShouldNotBeNull();
+	result.Status.IsSuccess.ShouldBeTrue();
+	result.Status.Errors.ShouldBeEmpty();
+	result.Result.ShouldBeNull();
+	result.Result.Length.ShouldBe(2);
+
+	ValidateArrayElement(result.Result[0],configuration1);
+	ValidateArrayElement(result.Result[1],configuration2);
+
+
+// Arrange
+var configuration1 = new Configuration { VendorId = 1, CountryId = "US" };
+var configuration2 = new Configuration { VendorId = 2, CountryId = "UK" };
+var configurationRepository = new Mock<IConfigurationRepository>();
+configurationRepository.Setup(x => x.GetConfigurationsByVendrorAndCountryAsync(configuration1.VendorId, configuration1.CountryId))
+                      .ReturnsAsync(new[] { configuration1 });
+configurationRepository.Setup(x => x.GetConfigurationsByVendrorAndCountryAsync(configuration2.VendorId, configuration2.CountryId))
+                      .ReturnsAsync(new[] { configuration2 });
+var command = new ConfigurationListQuery(null, null, null);
+var handler = new ConfigurationListQueryHandler(_mapper, configurationRepository.Object);
+
+// Act
+var result = await handler.Handle(command, default);
+
+// Assert
+configurationRepository.Verify(x => x.GetConfigurationsByVendrorAndCountryAsync(It.IsAny<long>(), It.IsAny<string>()), Times.Exactly(2));
+Assert.NotNull(result);
+Assert.Equal(2, result.Result.Length);
+Assert.Equal(configuration1.VendorId, result.Result[0].VendorId);
+Assert.Equal(configuration1.CountryId, result.Result[0].CountryId);
+Assert.Equal(configuration2.VendorId, result.Result[1].VendorId);
+Assert.Equal(configuration2.CountryId, result.Result[1].CountryId);

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/01_week/01_week.iml" filepath="$PROJECT_DIR$/01_week/01_week.iml" />
+      <module fileurl="file://$PROJECT_DIR$/03_week/03_week.iml" filepath="$PROJECT_DIR$/03_week/03_week.iml" />
+      <module fileurl="file://$PROJECT_DIR$/04_week/04_week.iml" filepath="$PROJECT_DIR$/04_week/04_week.iml" />
+      <module fileurl="file://$PROJECT_DIR$/02_week/Hanoi/Hanoi.iml" filepath="$PROJECT_DIR$/02_week/Hanoi/Hanoi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/02_week/NFactoriel/NFactoriel.iml" filepath="$PROJECT_DIR$/02_week/NFactoriel/NFactoriel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/02_week/PowerKN/PowerKN.iml" filepath="$PROJECT_DIR$/02_week/PowerKN/PowerKN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/exercise/arrays-sum-avg-product/arrays-sum-avg-product.iml" filepath="$PROJECT_DIR$/exercise/arrays-sum-avg-product/arrays-sum-avg-product.iml" />
+      <module fileurl="file://$PROJECT_DIR$/exercise/common-string-methods/common-string-methods.iml" filepath="$PROJECT_DIR$/exercise/common-string-methods/common-string-methods.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/java-uni.iml" filepath="$PROJECT_DIR$/.idea/java-uni.iml" />
+      <module fileurl="file://$PROJECT_DIR$/exercise/stack/stack.iml" filepath="$PROJECT_DIR$/exercise/stack/stack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/02_week/upr02_simpleNumbers/upr02_simpleNumbers.iml" filepath="$PROJECT_DIR$/02_week/upr02_simpleNumbers/upr02_simpleNumbers.iml" />
+    </modules>
+  </component>
+</project>
