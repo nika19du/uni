@@ -1,0 +1,36 @@
+c# unit test my method ClientPayElement_ClientPayElementUpdatedHandler_Success(Fixture fixture)
+throw exception: Expected invocation on the mock once, but was 0 times: x=>x.UpdateAsync(It.IsAny<Record>());
+Performed invocations: Mock<IRecordRepository:1>(x)L
+IRecordRepository.GetRecordsByReferenceIdAsync(236)
+IRecordRepository.UpdateAsync<Variable>(Record,e=>e.Variable,e=>e.Variable.get_Item(-1),Variable)
+public async Task ClientPayElement_ClientPayElementUpdatedHandler_Success(Fixture fixture){
+    var recordFeatured=new Business.Models.Records.Record();
+    var recordFOther=new Business.Models.Records.Record();
+
+    var variableFeatured=CreateVariableObject(fixture);
+    var variableOther=CreateVariableObject(fixture);
+
+    var newCodeReferenceId= variableFeatured.CustomerPayElement!.ReferenceId;
+    var newCode = variableFeatured.CustomerPayElement!.Code;
+    var newLocalDescription=fixture.Create<string>();
+    var newGlobalDescription=fixture.Create<string>();
+
+    var recurringFeatured=CreateRecurringObject(fixture, newCode,newCodeReferenceId);
+    var recurringOther=CreateRecurringObject(fixture);
+
+    recordFeatured.Variable = new List<Business.Models.Records.Variable>{variableFeatured,variableOther};
+    recordFeatured.Recurring = new List<Business.Models.Records.Recurring>{recurringFeatured,recurringOther};
+
+    var repository = new Mock<IRecordRepository>();
+    repository.Setup(x=>x.GetRecordsByReferenceIdAsync(newCodeReferenceId)).ReturnsAsync(new[]{recordFeatured});
+
+    var command=new ClientPayElementUpdated(referenceId:newCodeReferenceId,code:newCode,flipSignatureChanged:false,localDescription:newLocalDescription,
+    globalDescription:newGlobalDescription,isValue:fixture.Create<bool>(),isAbsence:fixture.Create<bool>());
+
+    var handler = new CustomerPayElementUpdatedHandler(repository.Object);
+    //Act
+    await handler.Handle(new DomainNotification<ClientPayElementUpdated>(command),new CancellationToken());
+    //Assert
+    repository.Verify(x=>x.UpdateAsync(It.IsAny<Business.Models.Records.Record>()),Times.Once);
+    repository.Verify(x=>x.GetRecordsByReferenceIdAsync(newCodeReferenceId),Times.Once);
+    repository.VerifyNoOtherCalls();
