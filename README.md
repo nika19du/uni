@@ -1,4 +1,5 @@
 # uni era
+java-fmi-course2023: [source](https://github.com/nika19du/uni/tree/master/exercise)
 ![java-15](https://user-images.githubusercontent.com/59253452/225891783-cc9c4870-ec69-43b6-90c2-38ddb20929a3.jpg)\
 OOP tasks: [java-opp-tasks](https://github.com/nika19du/uni/tree/master/exercise/oop)\
 OOP theory: [java-theory](https://github.com/nika19du/uni/blob/master/doc.txt)\
