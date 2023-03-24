@@ -1,0 +1,27 @@
+my c# unit test show exception: this mock failed verification due to the following unverified invocations:
+IRecordRepository.UpdateAsync<Absence>(Record,e=>e.Absence,e=>e.Absence.get_Item(-1),Absence);
+public async Task AbsenceParameter_AbsenceParameterUpdatedHandler_Success(Fixture fixture){
+    var recordFeatured = new Bussiness.Models.Records.Record();
+    var absenceFeatured = CreateAbsenceObject(fixture);
+
+    recordFeatured.Absence = new List<Bussiness.Models.Record.Absence> {absenceFeatured};
+
+    var newCode = "NewCode1";
+    var oldCode = absenceFeatured.Params?.FirstOrDefault().Key;
+    var codeValue= absenceFeatured.Params?.FirstOrDefault().Value;
+
+    var repository = new Mock<IRecordRepository>();
+    repository.Setup(x=>x.GetRecordsByCompanyTypeAsync(absenceFeatured!.CompanyType!.ReferenceId)).ReturnsAsync(new[]{recordFeatured});
+
+    var command = new AbsenceParameterElementUpdated(referenceId:fixture.Create<long>(),
+    code:newCode,localDescription:fixture.Create<string>(), globalDescription:fixture.Create<string>(),oldCode:oldCode,
+    companyTypeId: absenceFeatured.CompanyType?.ReferenceId);
+
+    var handler = new AbsenceParameterElementUpdatedHandler(repository.Object);
+    // Act
+    await handler.Handle(new DomainNotification<AbsenceParameterElementUpdated>(command),new CancellationToken());
+    // Assert
+    Assert.NotNull(repository.Object);
+    repository.Verify(x=>x.GetRecordsByCompanyTypeAsync(absenceFeatured!.CompanyType!.ReferenceId),Times.Once);
+    repository.VerifyNoOtherCalls();
+}
