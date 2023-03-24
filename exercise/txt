@@ -1,0 +1,59 @@
+using Xunit;
+using Moq;
+using System.Threading.Tasks;
+
+public class AddChangesHandlerTests
+{
+    [Fact]
+    public async Task Handle_ShouldReturnSuccess()
+    {
+        // Arrange
+        var fixture = new Fixture();
+        var requirement = new Mock<IUniqueEmployeeIdPerPayrollRequirement>();
+        requirement.Setup(x => x.IsFulfilled(It.IsAny<ChangeTrack>())).Returns(true);
+
+        var changeTrackRepo = new Mock<IChangeTrackRepository>();
+        changeTrackRepo.Setup(x => x.UpdateAsync(It.IsAny<ChangeTrack>())).ReturnsAsync(true);
+
+        var pcfFieldRepo = new Mock<IFieldRepository>();
+
+        var payrollRun = CreatePayrollRunObject(fixture);
+
+        var selector = new Mock<ISelector>();
+        selector.Setup(x => x.IsFoundable(It.IsAny<SelectCriteria>())).Returns(true);
+
+        var selectorCollection = new SelectorCollection(
+            criteria: fixture.Create<SelectCriteria>(),
+            selector.Object);
+
+        var selectorProvider = new Mock<ISelectorProvider>();
+        selectorProvider.Setup(x => x.Resolve(It.IsAny<SelectCriteria>())).Returns(selectorCollection);
+
+        var payrollRunRepo = new Mock<IPayrollRunRepository>();
+
+        var inputPayrollSelector = new InputPayrollRunsSelector(
+            logger: new Mock<ILog>().Object,
+            repository: payrollRunRepo.Object);
+
+        var command = new AddChangesCommand(
+            employeeId: fixture.Create<long>(),
+            hrId: fixture.Create<long>(),
+            cycleId: payrollRun.CycleId,
+            referenceId: fixture.Create<long>()
+        );
+
+        var handler = new AddChangesHandler(
+            changeTrackRepository: changeTrackRepo.Object,
+            fieldRepository: pcfFieldRepo.Object,
+            employeeIdRequirement: requirement.Object,
+            inputPayrollSelector: inputPayrollSelector,
+            selectorProvider: selectorProvider.Object);
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.True(result.Status.IsSuccess);
+    }
+}
