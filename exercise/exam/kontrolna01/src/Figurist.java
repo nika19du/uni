@@ -1,16 +1,16 @@
 public class Figurist {
-    public Figurist(String name,String gender,int[] ocenki){
+    public Figurist(String name,String gender,float[] ocenki){
         setName(name);
         setGender(gender);
         setOcenki(ocenki);
     }
     private  String name;
     private String gender;
-    private  int[] ocenki;
+    private float[] ocenki;
     public double getAvgScore(){
-        int min=this.FindMin();
-        int max=this.FindMax();
-        int[] copyArr=new int[ocenki.length];
+        float min=this.FindMin();
+        float max=this.FindMax();
+        [] copyArr=new float[ocenki.length];
         double sum=0d;
         for (int i=0;i<this.ocenki.length;i++){
             if(ocenki[i]!=min && ocenki[i]!=max){
@@ -26,10 +26,10 @@ public class Figurist {
         }
 
         this.ocenki=copyArr;
-        return ((double)sum/5);
+        return ((flot)sum/5);
     }
-    public int FindMin(){
-        int min=ocenki[0];
+    public float FindMin(){
+        float min=ocenki[0];
         for (int i=0;i<this.ocenki.length;i++){
             if (ocenki[i]<min){
                 min=ocenki[i];
@@ -38,8 +38,8 @@ public class Figurist {
         System.out.println("Min:"+min);
         return  min;
     }
-    public int FindMax(){
-        int max=ocenki[0];
+    public float FindMax(){
+        float max=ocenki[0];
         for (int i=0;i<this.ocenki.length;i++){
             if (ocenki[i]>max){
                 max=ocenki[i];
@@ -69,11 +69,11 @@ public class Figurist {
         this.gender = gender;
     }
 
-    public void setOcenki(int[] arr){
+    public void setOcenki(float[] arr){
         this.ocenki=arr;
     }
 
-    public int[] getOcenki(){
+    public float[] getOcenki(){
         return this.ocenki;
     }
 }
